@@ -1,0 +1,2 @@
+-	将HttpServletRequest的参数转换成queryString
+-	将请求转发给baidu.kuaidi100.com服务接口

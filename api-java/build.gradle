@@ -1,0 +1,7 @@
+sourceSets {
+    test {
+        java {
+            srcDirs += file("src/test/java-api")
+        }
+    }
+}
