@@ -1,2 +1,7 @@
--	½«HttpServletRequestµÄ²ÎÊı×ª»»³ÉqueryString
--	½«ÇëÇó×ª·¢¸øbaidu.kuaidi100.com·şÎñ½Ó¿Ú
+ï»¿-  [ranges:[1,2],type:"yunda"]=> "ranges=1&ranges=2&type=yunda"
+-  å°†è¯·æ±‚è½¬å‘ç»™baidu.kuaidi100.comæœåŠ¡æ¥å£
+-  ~~[] => ""~~
+-  ~~[type:"yunda"]=>"type=yunda"~~
+-  ~~[type:"yunda",postid:"1201088260402"] => "type=yunda&postid=1201088260402"~~
+-  ~~encode data:[type:"yun da"]=> "type=yun%20da"~~
+- ~~ranges:[1,2] => "ranges=1&ranges=2"~~
