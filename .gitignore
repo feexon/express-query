@@ -2,3 +2,10 @@
 out
 target
 build
+*.ipr
+*.iml
+*.iws
+gradlew
+gradlew.*
+gradle
+.gradle
