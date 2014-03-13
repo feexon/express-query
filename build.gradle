@@ -1,39 +1,47 @@
 // vim:ft=groovy 
-apply plugin: 'java'
-apply plugin: 'idea'
 
-repositories {
-    mavenCentral()
-}
 
-dependencies {
-
-    testCompile "junit:junit:4.11"
-}
-
-idea {
-    project {
-        jdkName = "1.6"
-        ipr {
-            beforeMerged { project ->
-                project.modulePaths.clear()
-            }
-            withXml { provider ->
-                provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
-            }
-        }
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    repositories {
+        mavenCentral()
+        mavenLocal()
     }
-    module {
+    dependencies {
+        testCompile "junit:junit:4.11"
+    }
+
+    idea.project {
+        jdkName = "1.6"
+
+    }
+    idea.module {
         inheritOutputDirs = false
         outputDir = file("$project.buildDir/classes/main")
         testOutputDir = file("$project.buildDir/classes/test")
-        iml {
-            beforeMerged { module ->
-                module.dependencies.clear()
-            }
-            whenMerged { module ->
-                module.dependencies*.exported = true
-            }
+
+        excludeDirs+=[file("gradle"),file(".gradle")]
+    }
+
+}
+
+rootProject.idea {
+    project.ipr {
+        beforeMerged { project ->
+            project.modulePaths.clear()
+        }
+        withXml { provider ->
+            provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
+        }
+    }
+
+    module.iml {
+        beforeMerged { module ->
+            module.dependencies.clear()
+        }
+        whenMerged { module ->
+            module.dependencies*.exported = true
         }
     }
 }
