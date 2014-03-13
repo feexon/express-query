@@ -4,9 +4,24 @@
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
+
     repositories {
         mavenCentral()
         mavenLocal()
+    }
+    configurations {
+        provided
+        compiler.extendsFrom(provided)
+    }
+    sourceSets {
+        main {
+            runtimeClasspath+=configurations.provided
+            compileClasspath+=configurations.provided
+        }
+        test{
+            runtimeClasspath+=configurations.provided
+            compileClasspath+=configurations.provided
+        }
     }
     dependencies {
         testCompile "junit:junit:4.11"
@@ -14,16 +29,20 @@ allprojects {
 
     idea.project {
         jdkName = "1.6"
-
+        languageLevel = "1.6"
     }
     idea.module {
         inheritOutputDirs = false
         outputDir = file("$project.buildDir/classes/main")
         testOutputDir = file("$project.buildDir/classes/test")
 
-        excludeDirs+=[file("gradle"),file(".gradle")]
+        excludeDirs += [file("gradle"), file(".gradle")]
     }
-
+    tasks.withType(JavaCompile) {
+        sourceCapability = 1.6
+        targetCapability = 1.6
+        options.encoding = "UTF-8"
+    }
 }
 
 rootProject.idea {
