@@ -1,4 +1,6 @@
-import com.lx2j.http.proxy.Params;
+package test;
+
+import com.lx2j.http.route.Params;
 import org.junit.Test;
 
 import java.net.URI;
@@ -12,17 +14,16 @@ import static org.junit.Assert.assertThat;
  * @version 1.0 14-3-13,下午4:16
  */
 public class ParamsTest {
+    private Params params = new Params();
 
     @Test
     public void noParams() throws Exception {
-        Params params = new Params();
         params.merge(new LinkedHashMap<String, String[]>());
         assertThat(params.queryString(), equalTo(""));
     }
 
     @Test
     public void one() throws Exception {
-        Params params = new Params();
         params.merge(new LinkedHashMap<String, String[]>() {{
             put("type", new String[]{"yunda"});
         }});
@@ -31,7 +32,6 @@ public class ParamsTest {
 
     @Test
     public void flattenParams() throws Exception {
-        Params params = new Params();
         params.merge(new LinkedHashMap<String, String[]>() {{
             put("type", new String[]{"yunda"});
             put("postid", new String[]{"1201088260402"});
@@ -41,7 +41,7 @@ public class ParamsTest {
 
     @Test
     public void encodeSpecialChars() throws Exception {
-        Params params = new Params().merge(new LinkedHashMap<String, String[]>() {{
+        params.merge(new LinkedHashMap<String, String[]>() {{
             put("type", new String[]{"yun da"});
         }});
         assertThat(params.queryString(), equalTo("type=yun+da"));
@@ -49,7 +49,7 @@ public class ParamsTest {
 
     @Test
     public void withinValues() throws Exception {
-        Params params = new Params().merge(new LinkedHashMap<String, String[]>() {{
+        params.merge(new LinkedHashMap<String, String[]>() {{
             put("ranges", new String[]{"1", "2"});
         }});
 
@@ -58,7 +58,6 @@ public class ParamsTest {
 
     @Test
     public void treatNullValueAsEmptyString() throws Exception {
-        Params params = new Params();
         params.merge(new LinkedHashMap<String, String[]>() {{
             put("type", new String[]{null});
         }});
@@ -68,7 +67,6 @@ public class ParamsTest {
 
     @Test
     public void mixedParams() throws Exception {
-        Params params = new Params();
         params.merge(new LinkedHashMap<String, String[]>() {{
             put("type", new String[]{"yunda"});
             put("ranges", new String[]{"1", "2"});
@@ -78,28 +76,24 @@ public class ParamsTest {
 
     @Test
     public void add() throws Exception {
-        Params params = new Params();
         params.with("type", "yunda");
         assertThat(params.queryString(), equalTo("type=yunda"));
     }
 
     @Test
     public void withNull() throws Exception {
-        Params params = new Params();
         params.with("type", null);
         assertThat(params.queryString(), equalTo("type="));
     }
 
     @Test
     public void withValues() throws Exception {
-        Params params = new Params();
         params.with("ranges", "1", "2");
         assertThat(params.queryString(), equalTo("ranges=1&ranges=2"));
     }
 
     @Test
     public void joinURIWithoutQueryString() throws Exception {
-        Params params = new Params();
         params.with("type", "yunda");
         assertThat(params.join(URI.create("http://baidu.kaidi100.com/kuaidi/query.jsp")).toString(), equalTo("http://baidu.kaidi100.com/kuaidi/query.jsp?type=yunda"));
         assertThat(params.join(URI.create("http://baidu.kaidi100.com/kuaidi/query.jsp?")).toString(), equalTo("http://baidu.kaidi100.com/kuaidi/query.jsp?type=yunda"));
@@ -107,7 +101,6 @@ public class ParamsTest {
 
     @Test
     public void joinURI() throws Exception {
-        Params params = new Params();
         params.with("type", "yunda");
         URI joined = params.join(URI.create("http://baidu.kaidi100.com/kuaidi/query.jsp?postid=1201088260402"));
         assertThat(joined.toString(), equalTo("http://baidu.kaidi100.com/kuaidi/query.jsp?postid=1201088260402&type=yunda"));

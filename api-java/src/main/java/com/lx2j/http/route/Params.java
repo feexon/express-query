@@ -1,4 +1,4 @@
-package com.lx2j.http.proxy;
+package com.lx2j.http.route;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -6,8 +6,8 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Administrator
@@ -16,7 +16,7 @@ import java.util.List;
 public class Params {
     private List<Param> params = new ArrayList<Param>();
 
-    public Params merge(HashMap<String, String[]> paramsMap) {
+    public Params merge(Map<String, String[]> paramsMap) {
         for (String name : paramsMap.keySet()) {
             with(name, paramsMap.get(name));
         }
