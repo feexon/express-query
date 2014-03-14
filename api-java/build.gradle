@@ -10,4 +10,5 @@ dependencies{
     provided "javax.servlet:servlet-api:2.5"
     testCompile 'org.springframework:spring-test:3.2.0.RELEASE'
     testCompile 'org.mortbay.jetty:jetty:6.1.26'
+    testCompile 'commons-io:commons-io:2.4'
 }

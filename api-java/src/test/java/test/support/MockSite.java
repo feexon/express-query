@@ -1,4 +1,4 @@
-package test;
+package test.support;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Handler;
@@ -17,12 +17,13 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Administrator
  * @version 1.0 14-3-13,下午6:13
  */
-class MockSite {
+public class MockSite {
     private Server server = new Server();
     private List<Expectation> expectations = new ArrayList<Expectation>();
     private Action action = respond("");
@@ -79,8 +80,16 @@ class MockSite {
         };
     }
 
+    public void verify() {
+        for (Expectation expectation : expectations) {
+            expectation.assertSatisfied();
+        }
+    }
+
     public static interface Expectation {
         void check(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+        void assertSatisfied();
     }
 
     public static interface Action {
@@ -92,20 +101,48 @@ class MockSite {
         return this;
     }
 
+    abstract private static class CheckedExpectation implements Expectation {
+        private boolean executed = false;
+
+        @Override
+        public void check(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            this.executed = true;
+        }
+
+        @Override
+        public void assertSatisfied() {
+            assertTrue("Expectation " + describeSelf() + " not invoked!", executed);
+        }
+
+        protected abstract String describeSelf();
+    }
+
     public static Expectation param(final String name, final String value) {
-        return new Expectation() {
+        return new CheckedExpectation() {
             @Override
             public void check(HttpServletRequest request, HttpServletResponse response) throws Exception {
                 assertThat(request.getParameter(name), equalTo(value));
+                super.check(request, response);
+            }
+
+            @Override
+            protected String describeSelf() {
+                return String.format("Param[%s=%s]", name, value);
             }
         };
     }
 
     public static Expectation header(final String name, final String value) {
-        return new Expectation() {
+        return new CheckedExpectation() {
             @Override
             public void check(HttpServletRequest request, HttpServletResponse response) throws Exception {
                 assertThat(request.getHeader(name), equalTo(value));
+                super.check(request, response);
+            }
+
+            @Override
+            protected String describeSelf() {
+                return String.format("Header[%s=%s]", name, value);
             }
         };
     }

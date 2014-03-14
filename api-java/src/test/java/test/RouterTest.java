@@ -1,20 +1,19 @@
 package test;
 
-import com.lx2j.http.route.Router;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import test.support.MockSite;
+import test.support.MockSiteRule;
 
 import static com.lx2j.http.route.Router.route;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static test.MockSite.*;
+import static test.support.MockSite.*;
 
 /**
  * @author Administrator
@@ -23,24 +22,17 @@ import static test.MockSite.*;
 public class RouterTest {
 
 
-    private MockSite site = new MockSite(9099);
+    private static final int SERVER_PORT = 9099;
+    private static final String SITE = "http://localhost:" + SERVER_PORT + "/";
+    @Rule
+    public MockSiteRule site = new MockSiteRule(SERVER_PORT);
     private MockHttpServletRequest request = new MockHttpServletRequest();
     private MockHttpServletResponse response = new MockHttpServletResponse();
-
-    @Before
-    public void startServer() throws Exception {
-        site.start();
-    }
-
-    @After
-    public void stopServer() throws Exception {
-        site.stop();
-    }
 
     @Test
     public void transferDataFromSite() throws Exception {
         site.will(respond("ok"));
-        route(request, response).to("http://localhost:9099/");
+        route(request, response).to(SITE);
         assertThat(response.getContentAsString(), equalTo("ok"));
     }
 
@@ -50,7 +42,7 @@ public class RouterTest {
 
         site.expect(param("type", "yunda"));
 
-        route(request, response).to("http://localhost:9099/");
+        route(request, response).to(SITE);
     }
 
     @Test
@@ -58,7 +50,7 @@ public class RouterTest {
         site.expect(param("type", "yunda")).expect(param("postid", "1201088260402"));
         request.setParameter("type", "yunda");
 
-        route(request, response).with("postid", "1201088260402").to("http://localhost:9099/");
+        route(request, response).with("postid", "1201088260402").to(SITE);
 
     }
 
@@ -67,7 +59,7 @@ public class RouterTest {
         site.expect(header("userAgent", "Mozilla"));
 
 
-        route(request, response).header("userAgent", "Mozilla").to("http://localhost:9099/");
+        route(request, response).header("userAgent", "Mozilla").to(SITE);
 
     }
 
@@ -76,7 +68,7 @@ public class RouterTest {
 
         response.setCommitted(true);
         try {
-            route(request, response).to("http://localhost:9099/");
+            route(request, response).to(SITE);
             fail("should raise exception");
         } catch (IllegalStateException expected) {
 
@@ -84,11 +76,4 @@ public class RouterTest {
 
     }
 
-    @Test
-    public void routeTo() throws Exception {
-        request.setParameter("type","yunda");
-        request.setParameter("postid","1201088260402");
-        route(request,response).to("http://baidu.kuaidi100.com/query?id=4&valicode=&temp=0.06312353069088816&tmp=0.501010342742183");
-        System.out.println(new String(response.getContentAsString().getBytes("ISO-8859-1"),"UTF-8"));
-    }
 }
