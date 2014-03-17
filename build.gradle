@@ -1,31 +1,8 @@
-// vim:ft=groovy 
-
+// vim:ft=groovy
 
 allprojects {
     apply plugin: 'idea'
-    apply plugin: 'java'
-
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-    configurations {
-        provided
-        compiler.extendsFrom(provided)
-    }
-    sourceSets {
-        main {
-            runtimeClasspath+=configurations.provided
-            compileClasspath+=configurations.provided
-        }
-        test{
-            runtimeClasspath+=configurations.provided
-            compileClasspath+=configurations.provided
-        }
-    }
-    dependencies {
-        testCompile "junit:junit:4.11"
-    }
+    apply plugin: 'maven'
 
     idea.project {
         jdkName = "1.6"
@@ -42,6 +19,9 @@ allprojects {
         sourceCapability = 1.6
         targetCapability = 1.6
         options.encoding = "UTF-8"
+    }
+    tasks.withType(Test) {
+        systemProperty("file.encoding", "UTF-8")
     }
 }
 
@@ -64,3 +44,5 @@ rootProject.idea {
         }
     }
 }
+
+
