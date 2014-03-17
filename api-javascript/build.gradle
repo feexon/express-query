@@ -1,0 +1,53 @@
+// Pull the plugin from a Maven Repo
+System.setProperty('file.encoding', 'GBK')
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.eriwen:gradle-js-plugin:1.9.0'
+    }
+}
+// Invoke the plugin
+apply plugin: 'js'
+def jsSrcDir = "src"
+// Declare your sources
+javascript.source {
+    dev {
+        js {
+            srcDir jsSrcDir
+            include "*.js"
+            exclude "*.min.js"
+        }
+    }
+    prod {
+        js {
+            srcDir jsSrcDir
+            include "*.min.js"
+        }
+    }
+}
+
+
+combineJs {
+    source = javascript.source.dev.js.files
+    dest = file("${buildDir}/all.js")
+    encoding="GBK"
+}
+
+minifyJs {
+    source = combineJs
+    dest = file("${buildDir}/all-min.js")
+    sourceMap = file("${buildDir}/all.sourcemap.json")
+    closure {
+        warningLevel = 'QUIET'
+        encoding = "UTF-8"
+        compilerOptions.outputCharset="GBK"
+    }
+}
+
+gzipJs {
+    source.plus(minifyJs.source)
+    dest = file("${buildDir}/all-min.js")
+}
