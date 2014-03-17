@@ -13,12 +13,35 @@
             $.ajax($.express.url || $.express.defaults.url, settings)
         },
         providers: (function () {
-            var ret = []
+            var ret = [];
             for (var p in providers) {
-                ret.push($.extend(providers[p]))
+                ret.push($.extend(providers[p]));
             }
             return ret;
         })()
     };
 
-})(jQuery)
+
+    $.fn.print_express = function () {
+
+        //todo:trigger('before_print')
+        var container = this;
+        $.express.query(this.attr("type"), this.attr("post_id"), function (response) {
+            //todo:show response.errors unless response.success
+            var result;
+            eval('result=' + response.responseText);
+            var routes = result.data;
+            for (var i = routes.length; --i >= 0;) {
+                var route = $("<div>");
+                if (i == 0) {
+                    route.addClass("active")
+                }
+                route.appendTo(container);
+                route.append($("<time>").text(routes[i].time));
+                route.append($("<span>").text(routes[i].context))
+            }
+            //todo:trigger('after_print')
+        })
+
+    }
+})(jQuery);
