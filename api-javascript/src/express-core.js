@@ -9,7 +9,7 @@
                 throw "Unknown provider:" + type;
             }
             var data = {data: {type: type, postid: postid}};
-            var settings = $.extend({compelte: callback}, data)
+            var settings = $.extend({complete: callback}, data)
             $.ajax($.express.url || $.express.defaults.url, settings)
         },
         providers: (function () {

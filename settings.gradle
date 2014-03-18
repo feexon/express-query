@@ -18,4 +18,4 @@ include 'services:webservice'
 
 rootProject.name = 'express-query'
 
-include 'api-java','api-javascript'
+include 'api-java', 'api-javascript'

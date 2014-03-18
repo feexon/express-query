@@ -21,7 +21,7 @@ describe("express", function () {
             expect(options.url).toEqual($.express.defaults.url);
             expect(options.data.type).toEqual("yunda");
             expect(options.data.postid).toEqual("1201088260402");
-            expect(options.compelte).toBe(callback);
+            expect(options.complete).toBe(callback);
 
         })
 
