@@ -30,6 +30,7 @@
             //todo:show response.errors unless response.success
             var result;
             eval('result=' + response.responseText);
+            //todo:show express closed or server occur errors unless result.status=="200"
             var routes = result.data;
             for (var i = routes.length; --i >= 0;) {
                 var route = $("<div>");
