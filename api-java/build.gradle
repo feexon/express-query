@@ -6,11 +6,10 @@ repositories {
 }
 configurations {
     provided
-    compiler.extendsFrom(provided)
+    compiler
 }
 sourceSets {
     main {
-        runtimeClasspath += configurations.provided
         compileClasspath += configurations.provided
     }
     test {
@@ -29,7 +28,11 @@ sourceSets {
         }
     }
 }
-
+idea {
+    module {
+        scopes.PROVIDED.plus += configurations.provided;
+    }
+}
 dependencies {
     provided "javax.servlet:servlet-api:2.5"
     testCompile 'org.springframework:spring-test:3.2.0.RELEASE'
